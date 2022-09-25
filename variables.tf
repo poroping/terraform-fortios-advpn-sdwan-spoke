@@ -16,15 +16,10 @@ variable "underlay_networks" {
   default     = []
 }
 
-variable "interregional_dynamic_vpn_networks" {
-  type        = set(string)
-  description = "Set of networks used for dynamic vpn in other regions. That are connected to the hub."
-  default     = []
-}
-
 variable "vdom" {
   type        = string
   description = "VDOM to apply configuration."
+  default     = "root"
 }
 
 variable "interfaces" {
@@ -39,13 +34,9 @@ variable "interfaces" {
 }
 
 variable "bgp_as" {
-  type    = number
-  default = 65000
-}
-
-variable "bgp_router_id" {
-  type    = string
-  default = null
+  type        = number
+  description = "BGP AS to use for ADVPN."
+  default     = 65000
 }
 
 variable "hub_links" {
@@ -70,6 +61,7 @@ variable "hub_id" {
     condition     = var.hub_id >= 1 && var.hub_id <= 9
     error_message = "Value must be between 1 and 9 inclusive."
   }
+  description = "Hub ID - single digit int."
 }
 
 variable "hub_sla" {
@@ -89,9 +81,10 @@ variable "hub_sla" {
 variable "spoke_id" {
   type = number
   validation {
-    condition     = var.spoke_id >= 1 && var.spoke_id <= 250
-    error_message = "Value must be between 1 and 250 inclusive."
+    condition     = var.spoke_id >= 1 && var.spoke_id <= 254
+    error_message = "Value must be between 1 and 254 inclusive."
   }
+  description = "Spoke ID - Between 1 and 254."
 }
 
 variable "ipsec_proposal" {
@@ -109,4 +102,10 @@ variable "ipsec_dhgrp" {
   type        = string
   description = "List of dhgrp separated by whitespace."
   default     = "14"
+}
+
+variable "ip_fragmentation" {
+  type        = string
+  description = "Determine whether IP packets are fragmented before or after IPsec encapsulation."
+  default     = null
 }
